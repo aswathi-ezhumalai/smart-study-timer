@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Study Timer - GMM</title>
+    <link rel="stylesheet" href="./frontend/style.css">
+    <script>
+        async function submitForm(event) {
+            event.preventDefault();
+            const focus_time = document.getElementById("focus_time").value;
+            const break_time = document.getElementById("break_time").value;
+            const distractions = document.getElementById("distractions").value;
+
+            const response = await fetch("/predict", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ focus_time, break_time, distractions })
+            });
+
+            const result = await response.json();
+            document.getElementById("result").innerText = "Suggestion: " + result.suggestion;
+        }
+    </script>
+</head>
+<body>
+    <h2>Smart Study Timer - GMM</h2>
+    <form onsubmit="submitForm(event)">
+        <label>Focus Time (minutes):</label>
+        <input type="number" id="focus_time" required><br><br>
+
+        <label>Break Time (minutes):</label>
+        <input type="number" id="break_time" required><br><br>
+
+        <label>Distractions Count:</label>
+        <input type="number" id="distractions" required><br><br>
+
+        <button type="submit">Submit</button>
+        <p id="result"></p>
+    </form>
+</body>
+</html>
